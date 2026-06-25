@@ -29,7 +29,7 @@ function taskExists(taskText) {
 
 addBtn.addEventListener("click", addTask);
 
-document.addEventListener("keydown",()=>{
+taskInput.addEventListener("keydown",(event)=>{
     if (event.key === "Enter"){
         addTask()
     }
@@ -44,10 +44,10 @@ function addTask() {
         return;
     }
 
-    // if (taskExists(task)) {
-    // showNotification("Task already exists!","error");
-    // return;
-    // }
+    if (taskExists(taskText)) {
+    showNotification("Task already exists!","error");
+    return;
+    }
 
     const li = document.createElement("li");
 
