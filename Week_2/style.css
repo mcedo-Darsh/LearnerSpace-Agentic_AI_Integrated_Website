@@ -6,16 +6,14 @@
 }
 
 body{
-    height: 100vh;
+    min-height: 100vh;
     font-family: 'Quicksand', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    background: #EEEEEE;
-    background: linear-gradient(180deg, rgba(238, 238, 238, 1) 0%, rgba(201, 229, 212, 1) 17%, rgba(111, 207, 151, 1) 42%, rgba(47, 160, 132, 1) 76%, rgba(31, 111, 95, 1) 100%);
-    
-    background-repeat: no-repeat;
+    background: #57C785;
+    background: linear-gradient(90deg, rgba(87, 199, 133, 1) 0%, rgba(102, 201, 126, 1) 32%, rgba(137, 205, 110, 1) 82%, rgba(172, 209, 95, 1) 100%);
+    background-repeat: repeat-y;
 }
 
 .container{
@@ -24,6 +22,8 @@ body{
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 h1{
@@ -37,17 +37,26 @@ h1{
 }
 
 input{
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    width: 78%;
+    border-width: 2px;
+    border-radius: 20px;
+    height: 50px;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.8);
 }
 
 button{
-    padding: 10px 15px;
+    padding: 10px 15px; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
+
+    border-width: 2px;
+    border-radius: 20px;
+    height: 50px;
 }
 
 #addBtn{
@@ -79,8 +88,8 @@ li{
     align-items: center;
     padding: 10px;
     margin-top: 10px;
-    background: #f8f8f8;
-    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
 }
 
 .task-buttons{
