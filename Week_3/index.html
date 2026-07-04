@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+       <head>
+           <meta charset="UTF-8">
+           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+           <title>Smart Task Planner</title>
+           <link rel="stylesheet" href="style.css">
+           <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Smart Task Planner</h1>
+
+        <div class="input-area">
+            <input
+                type="text"
+                id="goalInput"
+                placeholder="Enter your goal (e.g. Plan a trip to Goa)"
+            >
+
+            <button id="generateBtn">
+                Generate Tasks
+            </button>
+        </div>
+
+        <div id="status"></div>
+
+        <div id="taskContainer"></div>
+
+    </div>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>
