@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Assistant</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<div class="sidebar">
+<div class="logo"><i class="fa-solid fa-wallet"></i> Finance Tracker</div>
+<ul>
+<li><a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+<li><a href="add-transaction.html"><i class="fa-solid fa-plus"></i> Add Transaction</a></li>
+<li><a href="history.html"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+<li><a href="reports.html"><i class="fa-solid fa-chart-line"></i> Reports</a></li>
+<li class="active"><a href="assistant.html"><i class="fa-solid fa-robot"></i> AI Assistant</a></li>
+<li><a href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+</ul>
+</div>
+
+<div class="main">
+<h1>AI Financial Assistant</h1>
+<p style="margin:10px 0 30px;">Ask anything about budgeting, saving, investing or your spending.</p>
+
+<div class="card">
+<div id="chat" style="height:500px;overflow-y:auto;display:flex;flex-direction:column;gap:15px;padding:10px;">
+<div class="ai-message">
+<b><i class="fa-solid fa-robot"></i> Assistant</b><br><br>
+Hello! 👋 I'm your Finance Assistant.<br>
+Ask me anything about your finances.
+</div>
+</div>
+
+<textarea id="prompt" rows="3" placeholder="Type your message..."></textarea>
+
+<div style="display:flex;justify-content:flex-end;margin-top:15px;">
+<button class="btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i> Send</button>
+</div>
+
+</div>
+</div>
+
+<script src="js/storage.js"></script>
+<script>
+try{
+const s=getSettings();
+if(s.darkMode) document.body.classList.add("dark");
+}catch(e){}
+</script>
+
+<script src="js/ai.js"></script>
+
+<script>
+const chat=document.getElementById("chat");
+const input=document.getElementById("prompt");
+
+function scrollBottom(){chat.scrollTop=chat.scrollHeight;}
+
+function addUser(msg){
+chat.innerHTML+=`<div style="display:flex;justify-content:flex-end;"><div class="user-message" style="max-width:75%;"><b>You</b><br><br>${msg}</div></div>`;
+scrollBottom();
+}
+
+function addAI(msg){
+chat.innerHTML+=`<div style="display:flex;justify-content:flex-start;"><div class="ai-message" style="max-width:75%;"><b><i class="fa-solid fa-robot"></i> Assistant</b><br><br>${msg.replace(/\n/g,"<br>")}</div></div>`;
+scrollBottom();
+}
+
+async function sendMessage(){
+const prompt=input.value.trim();
+if(!prompt) return;
+addUser(prompt);
+input.value="";
+chat.innerHTML+=`<div id="loading"><div class="ai-message"><i class="fa-solid fa-spinner fa-spin"></i> Thinking...</div></div>`;
+scrollBottom();
+try{
+const reply=await askAI(prompt);
+document.getElementById("loading").remove();
+addAI(reply);
+}catch(e){
+document.getElementById("loading").remove();
+addAI("Sorry, something went wrong.");
+}
+}
+
+document.getElementById("sendBtn").onclick=sendMessage;
+
+input.addEventListener("keydown",e=>{
+if(e.key==="Enter" && !e.shiftKey){
+e.preventDefault();
+sendMessage();
+}
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transaction History</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <i class="fa-solid fa-wallet"></i>
+
+        Finance Tracker
+
+    </div>
+
+    <ul>
+
+        <li>
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-pie"></i>
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="add-transaction.html">
+                <i class="fa-solid fa-plus"></i>
+                Add Transaction
+            </a>
+        </li>
+
+        <li class="active">
+            <a href="history.html">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                History
+            </a>
+        </li>
+
+        <li>
+            <a href="reports.html">
+                <i class="fa-solid fa-chart-line"></i>
+                Reports
+            </a>
+        </li>
+
+        <li>
+            <a href="assistant.html">
+                <i class="fa-solid fa-robot"></i>
+                AI Assistant
+            </a>
+        </li>
+
+        <li>
+            <a href="settings.html">
+                <i class="fa-solid fa-gear"></i>
+                Settings
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="main">
+
+    <h1>Transaction History</h1>
+
+    <p style="margin-top:10px;margin-bottom:30px;">
+        View, search and manage all your transactions.
+    </p>
+
+    <div class="card">
+
+        <div style="display:flex; gap:20px; margin-bottom:25px;">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search transaction...">
+
+            <select id="filter">
+
+                <option value="all">All</option>
+
+                <option value="income">Income</option>
+
+                <option value="expense">Expense</option>
+
+            </select>
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Description</th>
+
+                    <th>Category</th>
+
+                    <th>Date</th>
+
+                    <th>Type</th>
+
+                    <th>Amount</th>
+
+                    <th></th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="historyBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="js/storage.js"></script>
+
+<script>
+
+const settings = getSettings();
+
+if(settings.darkMode){
+    document.body.classList.add("dark");
+}
+
+let transactions = getTransactions();
+
+const body = document.getElementById("historyBody");
+
+function loadTransactions(){
+
+    body.innerHTML="";
+
+    let search=document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+    let filter=document
+    .getElementById("filter")
+    .value;
+
+    let filtered=transactions.filter(t=>{
+
+        let matchesSearch=t.description
+        .toLowerCase()
+        .includes(search);
+
+        let matchesFilter=
+        filter==="all" ||
+        t.type===filter;
+
+        return matchesSearch && matchesFilter;
+
+    });
+
+    if(filtered.length===0){
+
+        body.innerHTML=
+
+        "<tr><td colspan='6'>No Transactions Found</td></tr>";
+
+        return;
+
+    }
+
+    filtered.reverse().forEach(t=>{
+
+        body.innerHTML+=`
+
+        <tr>
+
+            <td>${t.description}</td>
+
+            <td>${t.category}</td>
+
+            <td>${t.date}</td>
+
+            <td>
+
+                <span style="
+                color:${t.type==="income"?"green":"red"};
+                font-weight:600;">
+
+                ${t.type}
+
+                </span>
+
+            </td>
+
+            <td>
+
+                ${settings.currency}${t.amount}
+
+            </td>
+
+            <td>
+
+                <button
+
+                class="btn"
+
+                style="padding:8px 14px;background:#DC2626;"
+
+                onclick="removeTransaction(${t.id})">
+
+                <i class="fa-solid fa-trash"></i>
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function removeTransaction(id){
+
+    if(confirm("Delete this transaction?")){
+
+        deleteTransaction(id);
+
+        transactions=getTransactions();
+
+        loadTransactions();
+
+    }
+
+}
+
+document
+.getElementById("search")
+.addEventListener("input",loadTransactions);
+
+document
+.getElementById("filter")
+.addEventListener("change",loadTransactions);
+
+loadTransactions();
+
+</script>
+</body>
+</html>

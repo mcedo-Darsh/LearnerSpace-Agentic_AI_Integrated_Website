@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <i class="fa-solid fa-wallet"></i>
+
+        Finance Tracker
+
+    </div>
+
+    <ul>
+
+        <li>
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-pie"></i>
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="add-transaction.html">
+                <i class="fa-solid fa-plus"></i>
+                Add Transaction
+            </a>
+        </li>
+
+        <li>
+            <a href="history.html">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                History
+            </a>
+        </li>
+
+        <li class="active">
+            <a href="reports.html">
+                <i class="fa-solid fa-chart-line"></i>
+                Reports
+            </a>
+        </li>
+
+        <li>
+            <a href="assistant.html">
+                <i class="fa-solid fa-robot"></i>
+                AI Assistant
+            </a>
+        </li>
+
+        <li>
+            <a href="settings.html">
+                <i class="fa-solid fa-gear"></i>
+                Settings
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="main">
+
+    <h1>Reports</h1>
+
+    <p style="margin-top:10px;margin-bottom:35px;">
+        Analyze your spending patterns and receive AI-powered financial advice.
+    </p>
+
+    <div class="grid-2">
+
+        <div class="card">
+
+            <h3>Expense Distribution</h3>
+
+            <br>
+
+            <canvas id="expenseChart"></canvas>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Summary</h3>
+
+            <br>
+
+            <p><strong>Total Expenses:</strong></p>
+
+            <h2 id="totalExpense">₹0</h2>
+
+            <br>
+
+            <p><strong>Highest Spending Category:</strong></p>
+
+            <h2 id="highestCategory">-</h2>
+
+            <br>
+
+            <button
+            class="btn"
+            id="aiButton">
+
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                Generate AI Insights
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card">
+
+        <h3>AI Spending Insights</h3>
+
+        <br>
+
+        <p id="aiOutput">
+
+            Click the button above to receive personalized spending advice.
+
+        </p>
+
+    </div>
+
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/ai.js"></script>
+
+<script>
+
+const settings = getSettings();
+
+if(settings.darkMode){
+    document.body.classList.add("dark");
+}
+
+const totals = getCategoryTotals();
+
+const labels = Object.keys(totals);
+
+const values = Object.values(totals);
+
+document.getElementById("totalExpense").textContent =
+settings.currency + getTotalExpenses();
+
+if(values.length>0){
+
+    let max=Math.max(...values);
+
+    document.getElementById("highestCategory").textContent =
+    labels[values.indexOf(max)];
+
+}else{
+
+    document.getElementById("highestCategory").textContent =
+    "No Data";
+
+}
+
+new Chart(
+
+document.getElementById("expenseChart"),
+
+{
+
+type:"doughnut",
+
+data:{
+
+labels:labels,
+
+datasets:[{
+
+data:values,
+
+backgroundColor:[
+
+"#2563EB",
+"#16A34A",
+"#DC2626",
+"#F59E0B",
+"#8B5CF6",
+"#06B6D4",
+"#EC4899",
+"#84CC16"
+
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+position:"bottom"
+
+}
+
+}
+
+}
+
+}
+
+);
+
+document.getElementById("aiButton").addEventListener("click",async()=>{
+
+    document.getElementById("aiOutput").innerHTML="Generating insights...";
+    const reply=await askAI(`My total expenses are ${getTotalExpenses()}.My spending by category is ${JSON.stringify(totals)}.Give me 5 personalized financial suggestions.`);
+    document.getElementById("aiOutput").innerHTML=reply;
+
+});
+
+</script>
+
+</body>
+
+</html>
